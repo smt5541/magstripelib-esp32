@@ -2,6 +2,7 @@
  * MagStripe - Read data from a magnetic stripe card.
  *
  * Copyright (c) 2010 Carlos Rodrigues <cefrodrigues@gmail.com>
+ * Copyright (c) 2022 Seth Teichman <smt5541@rit.edu>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +27,8 @@
  */
 
 
-#ifndef MAGSTRIPE_H
-#define MAGSTRIPE_H
+#ifndef MAGSTRIPE_ESP32_H
+#define MAGSTRIPE_ESP32_H
 
 
 #include <Arduino.h>
@@ -84,7 +85,7 @@ class MagStripe {
 };
 
 
-#endif  /* MAGSTRIPE_H */
+#endif  /* MAGSTRIPE_ESP32_H */
 
 
 /* vim: set expandtab ts=4 sw=4: */

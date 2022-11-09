@@ -1,11 +1,11 @@
 What is it?
 ===========
 
-**MagStripe** is an [Arduino](http://arduino.cc/) library to interface with TTL (raw) magnetic card readers.
+**MagStripe** is an [Arduino](http://arduino.cc/) library for [ESP32](https://docs.espressif.com/projects/arduino-esp32/en/latest/) to interface with TTL (raw) magnetic card readers.
 It supports reading any of the cards' possible three tracks, but not simultaneously. Most cards only contain
 data on tracks 1 and 2 though.
 
-![MagStripe-KDE.jpg](https://raw.githubusercontent.com/carlosefr/magstripelib/master/MagStripe-KDE.jpg)
+![MagStripe-KDE.jpg](https://raw.githubusercontent.com/smt5541/magstripelib-esp32/master/MagStripe-KDE.jpg)
 
 Card Readers
 ============
@@ -21,39 +21,32 @@ varying colors for each wire, but usually there are five wires with the followin
   * Power/+5V (red wire)
 
 For more information, you can check the
-[KDE KDR-1000 datasheet](https://github.com/carlosefr/magstripelib/blob/docs/docs/KDR1000.pdf) (pictured above),
+[KDE KDR-1000 datasheet](https://github.com/smt5541/magstripelib-esp32/blob/docs/docs/KDR1000.pdf) (pictured above),
 which can read all three tracks by repositioning the head, or the
-[Panasonic ZU-M1121 datasheet](https://github.com/carlosefr/magstripelib/blob/docs/docs/ZU-M1121S1.pdf) for an
+[Panasonic ZU-M1121 datasheet](https://github.com/smt5541/magstripelib-esp32/blob/docs/docs/ZU-M1121S1.pdf) for an
 example of another reader which can only read track 2 and has a different pin arrangement.
+[]
 
 **Note:** This library is designed for **swipe-type** readers (like the one pictured above) meaning it requires the CLS pin to be active _low_ while the card is being swiped and _high_ otherwise. **Insert-type** readers usually have the CLS pin connected to a switch instead (active _high_ when the card is fully inserted and _low_ otherwise). This behavior is not supported by this library. Check your reader's datasheet if you're not sure how your reader behaves.
 
 Installation
 ============
 
-Download the latest zip file from the [releases](https://github.com/carlosefr/magstripelib/releases) section. Then open it from the `Sketch > Include Library > Add .ZIP Library...` menu inside the Arduino IDE and a new "MagStripe" entry should appear in the `Sketch > Include Library` and `File > Examples` menus.
+Download the latest zip file from the [releases](https://github.com/smt5541/magstripelib-esp32/releases) section. Then open it from the `Sketch > Include Library > Add .ZIP Library...` menu inside the Arduino IDE and a new "MagStripe" entry should appear in the `Sketch > Include Library` and `File > Examples` menus.
 
-![Arduino IDE](https://raw.githubusercontent.com/carlosefr/magstripelib/master/screenshot-01.png)
+![Arduino IDE](https://raw.githubusercontent.com/smt5541/magstripelib-esp32/master/screenshot-01.png)
 
 How it Works
 ============
 
-Connect your card reader to the following digital pins of the **Arduino Uno** (or other arduinos based on the
-ATmega8/168/328 processors):
+**Note:** This library has only been tested on the **ESP32-C3-MINI-1** chip on the **ESP32-C3-DevKitM-1**, performance on other ESP32 boards is not guaranteed. If you have another ESP32 and confirm that this works, please submit a PR to update this README. Conversely, if you have an issue on another ESP32, please [submit an issue](https://github.com/smt5541/magstripelib-esp32/issues/new).
 
-Arduino Pin   | Card Reader Pin
+Connect your card reader to the following digital pins of the **ESP32**:
+
+ESP32 Pin   | Card Reader Pin
 --------------|-----------------
 Digital Pin 2 | RDT/data
 Digital Pin 3 | RCL/clock
-Digital Pin 4 | CLS/card present
-
-The **Arduino Leonardo** or **Arduino Micro** (or other arduinos based on the ATmega32U4 processor) have a diferent
-interrupt pin assignment so, if you have one of these, connect the wires like this instead (swapped clock/data wires):
-
-Arduino Pin   | Card Reader Pin
---------------|-----------------
-Digital Pin 2 | RCL/clock
-Digital Pin 3 | RDT/data
 Digital Pin 4 | CLS/card present
 
 If your reader can read multiple tracks at a time, and thus has extra sets of data and clock wires, check its
@@ -68,5 +61,5 @@ from the card. The data returned is a string with the (ASCII) full contents of t
 characters.
 
 To know about the format of data returned for each track, check the
-[magnetic card standards](https://github.com/carlosefr/magstripelib/blob/docs/docs/layoutstd.pdf)
+[magnetic card standards](https://github.com/smt5541/magstripelib-esp32/blob/docs/docs/layoutstd.pdf)
 reference.

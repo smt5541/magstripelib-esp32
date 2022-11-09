@@ -2,6 +2,7 @@
  * MagStripe - Read data from a magnetic stripe card.
  *
  * Copyright (c) 2010 Carlos Rodrigues <cefrodrigues@gmail.com>
+ * Copyright (c) 2022 Seth Teichman <smt5541@rit.edu>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +24,7 @@
  */
 
 
-#include "MagStripe.h"
+#include "MagStripe_ESP32.h"
 
 #include <Arduino.h>
 
@@ -45,6 +46,9 @@ static bool bits_get(short index);
 // The interrupt handlers...
 static void handle_data(void);
 static void handle_clock(void);
+
+portMUX_TYPE dmux = portMUX_INITIALIZER_UNLOCKED;
+portMUX_TYPE cmux = portMUX_INITIALIZER_UNLOCKED;
 
 
 MagStripe::MagStripe(unsigned char cls):
@@ -261,21 +265,26 @@ static bool bits_get(short index)
 }
 
 
-static void handle_data()
+static void IRAM_ATTR handle_data()
 {
+    portENTER_CRITICAL_ISR(&dmux);
     next_bit = !next_bit;
+    portEXIT_CRITICAL_ISR(&dmux);
 }
 
 
-static void handle_clock()
+static void IRAM_ATTR handle_clock()
 {
+    portENTER_CRITICAL_ISR(&cmux);
     // Avoid a crash in case there are too many bits (garbage)...
     if (num_bits >= BIT_BUFFER_LEN) {
+        portEXIT_CRITICAL_ISR(&cmux);
         return;
     }
 
     bits_set(num_bits, next_bit);
     num_bits++;
+    portEXIT_CRITICAL_ISR(&cmux);
 }
 
 
